@@ -13,7 +13,7 @@ predictor_kx = DetectionPredictor(overrides=overrides_1)
 
 # video_path = r"/home/chenjun/code/datasets/bank_monitor/save_video/c3.mp4"
 # video_path = r"/home/chenjun/下载/bank2406-柜台垂直视角1/城东柜员1/城东柜员1全景_20240201161000-20240201162000_1.mp4"
-video_path = r"kx.mp4"
+video_path = r"../../tests_det/kx/kx.mp4"
 cap = cv2.VideoCapture(video_path)
 
 

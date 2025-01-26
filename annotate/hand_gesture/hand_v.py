@@ -7,8 +7,8 @@ from PIL import Image
 from ultralytics.models.yolo.detect.predict import DetectionPredictor
 from ultralytics.models.yolo.pose.predict import PosePredictor
 from ultralytics.values.color import colors_dict_ch_bgr
-from load_res_shu import resnet_pred, shufflenet_pred
-from load_kpnet import kp_predictor
+from annotate.hand_gesture.load_res_shu import resnet_pred, shufflenet_pred
+from annotate.hand_gesture.load_kpnet import kp_predictor
 
 
 def expand_bbox(xyxy, img_width, img_height, scale=0.1):

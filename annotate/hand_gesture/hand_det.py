@@ -1,8 +1,7 @@
 import cv2
-from ops_image import draw_detections_pipeline, resize_image
+from tests_det.test_utils.ops_image import draw_detections_pipeline, resize_image
 from ultralytics.models.yolo.detect.predict import DetectionPredictor
-from ultralytics.values.color import colors_dict_ch_bgr
-from tests_det.det_test_utils import get_video, plot_bbox, plot_keypoints, expand_bbox
+from annotate.hand_gesture.det_test_utils import plot_bbox, expand_bbox
 
 overrides_1 = {"task": "det",
                "mode": "predict",

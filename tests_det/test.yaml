@@ -1,9 +1,0 @@
-
-train: /datasets/handpose/handpose_v2_yolov8_pose/train/images
-val: ["/home/chenjun/datasets/bank_scene/00-task/det_hand/det_hand_batch_1/bank_hand_det_batch_1/invalid"]
-
-# Classes
-names:
-  0: ykx
-  # 0: kx
-  # 1: kx_dk
