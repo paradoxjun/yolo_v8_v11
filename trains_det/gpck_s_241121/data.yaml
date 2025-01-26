@@ -1,0 +1,35 @@
+# path: /path/to/datasets
+train: ["/data/chenjun/datasets/JH_data/det_gpck/GPCK_11_21/train/images",
+        "/data/chenjun/datasets/JH_data/det_gpck/GPCK_11_22/train/images",
+        "/data/chenjun/datasets/JH_data/det_gpck/GPCK_11_25/train/images",
+        "/data/chenjun/datasets/JH_data/det_gpck/GPCK_POC_11_26/train/images",
+        "/data/chenjun/datasets/JH_data/det_gpck/GPCK_ZP_11_18/train/images",
+        "/data/chenjun/datasets/JH_data/det_gpck/GPCK_internet_data_1/train/images",
+        "/data/chenjun/datasets/JH_data/det_gpck/GPCK_internet_data_2/train/images",
+        "/data/chenjun/datasets/JH_data/det_gpck/KX_b2_xjq_part_2/train/images",
+        "/data/chenjun/datasets/JH_data/det_gpck/gpck_zp_ck/train/images"]
+val: ["/data/chenjun/datasets/JH_data/det_gpck/GPCK_11_21/val/images",
+      "/data/chenjun/datasets/JH_data/det_gpck/GPCK_11_22/val/images",
+      "/data/chenjun/datasets/JH_data/det_gpck/GPCK_11_25/val/images",
+      "/data/chenjun/datasets/JH_data/det_gpck/GPCK_POC_11_26/val/images",
+      "/data/chenjun/datasets/JH_data/det_gpck/GPCK_ZP_11_18/val/images",
+      "/data/chenjun/datasets/JH_data/det_gpck/GPCK_internet_data_1/val/images",
+      "/data/chenjun/datasets/JH_data/det_gpck/GPCK_internet_data_2/val/images",
+      "/data/chenjun/datasets/JH_data/det_gpck/KX_b2_xjq_part_2/val/images",
+      "/data/chenjun/datasets/JH_data/det_gpck/gpck_zp_ck/val/images"]
+
+# Add negative image ---------------------------------------------------------------------------------------------------
+negative_setting:
+  neg_ratio: 0    # 小于等于0时，按原始官方配置训练，大于0时，控制正负样本。
+  use_extra_neg: False
+  extra_neg_sources: {
+                      # "/home/chenjun7167/code/datasets/negative_dataset/neg_hand/train": 50000
+                      }
+  fix_dataset_length: -1    # 是否自定义每轮参与训练的图片数量
+
+# number of classes ----------------------------------------------------------------------------------------------------
+nc: 1
+
+# Classes --------------------------------------------------------------------------------------------------------------
+names:
+  0: ck

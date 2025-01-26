@@ -1,0 +1,49 @@
+# path: /path/to/datasets
+train: ["/data/chenjun/datasets/bank_scene/00-task/det_kx/det_kx_internet/train/images",
+        "/data/chenjun/datasets/bank_scene/00-task/det_kx/det_kx_jiaohang_1028/yolo_det_kx_jh_1028/train/images",
+        "/data/chenjun/datasets/bank_scene/00-task/det_kx/det_kx_1101/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_1111/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_1112/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_1113/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_1126_ZP/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_1128/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_b2_xjq_part_1/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_b2_xjq_part_2/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_b2_xjq_part_3/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_b2_xjq_part_4/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_1203_CS/train/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_1211_poc_test/images",
+        "/data/chenjun/datasets/JH_data/det_kx/KX_1211_poc_test_2/train/images"]
+        # "/data/chenjun/datasets/COCO2017/det_neg_bank/images/train2017"]
+val: ["/data/chenjun/datasets/bank_scene/00-task/det_kx/det_kx_internet/val/images",
+      "/data/chenjun/datasets/bank_scene/00-task/det_kx/det_kx_jiaohang_1028/yolo_det_kx_jh_1028/val/images",
+      "/data/chenjun/datasets/bank_scene/00-task/det_kx/det_kx_1101/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_1111/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_1112/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_1113/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_1126_ZP/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_1128/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_b2_xjq_part_1/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_b2_xjq_part_2/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_b2_xjq_part_3/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_b2_xjq_part_4/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_1203_CS/val/images",
+      "/data/chenjun/datasets/JH_data/det_kx/KX_1211_poc_test_2/val/images"]
+      # "/data/chenjun/datasets/COCO2017/det_neg_bank/images/val2017"]
+
+# Add negative image ---------------------------------------------------------------------------------------------------
+negative_setting:
+  neg_ratio: 0.2    # 小于等于0时，按原始官方配置训练，大于0时，控制正负样本。
+  use_extra_neg: False
+  extra_neg_sources: {
+                      # "/home/chenjun7167/code/datasets/negative_dataset/neg_hand/train": 50000
+                      }
+  fix_dataset_length: 32000    # 是否自定义每轮参与训练的图片数量
+
+# number of classes ----------------------------------------------------------------------------------------------------
+nc: 2
+
+# Classes --------------------------------------------------------------------------------------------------------------
+names:
+  0: kx
+  1: kx_dk

@@ -1,0 +1,30 @@
+# Train settings -------------------------------------------------------------------------------------------------------
+task: pose              # (str) YOLO task, i.e. detect, segment, classify, pose
+mode: train             # (str) YOLO mode, i.e. train, val, predict, export, track, benchmark
+data: ./kx-pose.yaml    # (str, optional) path to data file, i.e. coco8.yaml
+epochs: 150             # (int) number of epochs to train for
+batch: 72               # (int) number of images per batch (-1 for AutoBatch)
+imgsz: 480              # (int | list) input images size as int for train and val modes, or list[w,h] for predict and export modes
+patience: 200           # (int) epochs to wait for no observable improvement for early stopping of training
+device: 1               # (int | str | list, optional) device to run on, i.e. cuda device=0 or device=0,1,2,3 or device=cpu
+project: ./             # (str, optional) project name
+name:                   # (str, optional) experiment name, results saved to 'project/name' directory
+optimizer: auto         # (str) optimizer to use, choices=[SGD, Adam, Adamax, AdamW, NAdam, RAdam, RMSProp, auto]
+multi_scale: True       # (bool) Whether to use multiscale during training
+close_mosaic: 0         # (int) disable mosaic augmentation for final epochs (0 to disable)
+resume: False           # (bool) resume training from last checkpoint
+workers: 0              # (int) number of worker threads for data loading (per RANK if DDP)
+
+# Hyperparameters ------------------------------------------------------------------------------------------------------
+lr0: 0.001               # (float) initial learning rate (i.e. SGD=1E-2, Adam=1E-3)
+lrf: 0.1               # (float) final learning rate (lr0 * lrf)
+box: 7.5                # (float) box loss gain
+cls: 0.5                # (float) cls loss gain (scale with pixels)
+dfl: 1.5                # (float) dfl loss gain
+pose: 12.0              # (float) pose loss gain
+kobj: 8.0               # (float) keypoint obj loss gain
+degrees: 0.0            # (float) image rotation (+/- deg)
+translate: 0.1          # (float) image translation (+/- fraction)
+scale: 0.5              # (float) image scale (+/- gain)
+fliplr: 0.5             # (float) image flip left-right (probability)
+mosaic: 0.95            # (float) image mosaic (probability)

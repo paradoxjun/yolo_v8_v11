@@ -1,0 +1,28 @@
+# path: /home/chenjun/code/datasets/bank_monitor/data_for_train_and_val # dataset root dir
+train: ["/home/chenjun7167/code/datasets/bank_monitor/gzwp/4kind_08_08/train/images",
+        "/home/chenjun7167/code/datasets/bank_monitor/gzwp/det_phone_coco/train/images",
+        "/home/chenjun7167/code/datasets/bank_monitor/gzwp/det_neg_gzwp/train/images",
+        "/home/chenjun7167/code/datasets/bank_monitor/gzwp/garbage_08_08"
+        ]
+val: ["/home/chenjun7167/code/datasets/bank_monitor/gzwp/4kind_08_08/val/images",
+      "/home/chenjun7167/code/datasets/bank_monitor/gzwp/det_phone_coco/val/images",
+      "/home/chenjun7167/code/datasets/bank_monitor/gzwp/det_neg_gzwp/val/images",
+      ]
+
+# Add negative image ---------------------------------------------------------------------------------------------------
+negative_setting:
+  neg_ratio: 1    # 小于等于0时，按原始官方配置训练，大于0时，控制正负样本。
+  use_extra_neg: True
+  extra_neg_sources: {}
+  fix_dataset_length: 18000    # 是否自定义每轮参与训练的图片数量
+
+# number of classes ----------------------------------------------------------------------------------------------------
+nc: 5
+
+# Classes --------------------------------------------------------------------------------------------------------------
+names:
+  0: phone
+  1: wallet
+  2: card
+  3: money
+  4: zbm

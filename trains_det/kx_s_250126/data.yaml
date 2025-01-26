@@ -1,0 +1,20 @@
+# path: /path/to/datasets
+train: ["G:/datasets/bank_scene/00-task/yolo_det_kx_jh_1028/yolo_det_kx_jh_1028/train"]
+val: ["G:/datasets/bank_scene/00-task/yolo_det_kx_jh_1028/yolo_det_kx_jh_1028/val"]
+
+# Add negative image ---------------------------------------------------------------------------------------------------
+negative_setting:
+  neg_ratio: 1    # 小于等于0时，按原始官方配置训练，大于0时，控制正负样本。
+  use_extra_neg: False
+  extra_neg_sources: {
+                      # "/home/chenjun7167/code/datasets/negative_dataset/neg_hand/train": 50000
+                      }
+  fix_dataset_length: 0    # 是否自定义每轮参与训练的图片数量
+
+# number of classes ----------------------------------------------------------------------------------------------------
+nc: 2
+
+# Classes --------------------------------------------------------------------------------------------------------------
+names:
+  0: kx
+  1: kx_dk

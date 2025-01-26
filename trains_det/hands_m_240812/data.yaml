@@ -1,0 +1,38 @@
+# path: /path/to/datasets
+train: ["/home/chenjun7167/code/datasets/hagrid/yolo_det/test/images",
+        "/home/chenjun7167/code/datasets/hand_detection/COCO_hand_det/train/images",
+        "/home/chenjun7167/code/datasets/hand_detection/TV_hand_det/train/images",
+        "/home/chenjun7167/code/datasets/hand_detection/TV_hand_det/train/images_neg",
+        "/home/chenjun7167/code/datasets/VOC/yolo_hand_det/train/images",
+        "/home/chenjun7167/code/datasets/hand_detection/100_day_of_hand/yolo_det/trainval/images",
+        "/home/chenjun7167/code/datasets/hand_detection/hand_det_ump/train/images",
+        "/home/chenjun7167/code/datasets/hand_detection/hand_det_ump/val/images",
+        "/home/chenjun7167/code/datasets/hand_keypoint_26k/yolo_det/train/images",
+        "/home/chenjun7167/code/datasets/hand_detection/hand_08_08/train/images",
+        "/home/chenjun7167/code/datasets/negative_dataset/neg_hand/train"]
+val: ["/home/chenjun7167/code/datasets/hagrid/yolo_det/val/images",
+      "/home/chenjun7167/code/datasets/hand_detection/COCO_hand_det/val/images",
+      "/home/chenjun7167/code/datasets/hand_detection/TV_hand_det/val/images",
+      "/home/chenjun7167/code/datasets/hand_detection/TV_hand_det/val/images_neg",
+      "/home/chenjun7167/code/datasets/VOC/yolo_hand_det/val/images",
+      "/home/chenjun7167/code/datasets/hand_detection/100_day_of_hand/yolo_det/test/images",
+      "/home/chenjun7167/code/datasets/hand_detection/hand_det_ump/test/images",
+      "/home/chenjun7167/code/datasets/hand_keypoint_26k/yolo_det/val/images",
+      "/home/chenjun7167/code/datasets/hand_detection/hand_08_08/val/images",
+      "/home/chenjun7167/code/datasets/negative_dataset/neg_hand/val"]
+
+# Add negative image ---------------------------------------------------------------------------------------------------
+negative_setting:
+  neg_ratio: 0    # 小于等于0时，按原始官方配置训练，大于0时，控制正负样本。
+  use_extra_neg: True
+  extra_neg_sources: {"/home/chenjun7167/code/datasets/hagrid/yolo_pose_neg/train/images": 42413,
+                      # "/home/chenjun7167/code/datasets/negative_dataset/neg_hand/train": 50000
+                      }
+  fix_dataset_length: 0    # 是否自定义每轮参与训练的图片数量
+
+# number of classes ----------------------------------------------------------------------------------------------------
+nc: 1
+
+# Classes --------------------------------------------------------------------------------------------------------------
+names:
+  0: hand

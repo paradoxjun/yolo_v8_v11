@@ -1,0 +1,31 @@
+# path: ../datasets/coco-pose # dataset root dir
+train: ['/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_1111/train/images',
+        '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_1113/train/images',
+        '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_1118/train/images',
+        '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_b2_xjq_part_1_1/train/images',
+        '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_b2_xjq_part_1_2/train/images',
+        '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_b2_xjq_part_2/train/images']
+
+val: ['/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_1111/val/images',
+      '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_1113/val/images',
+      '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_1118/val/images',
+      '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_b2_xjq_part_1_1/val/images',
+      '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_b2_xjq_part_1_2/val/images',
+      '/data/chenjun/datasets/JH_data/pose_kx_sz/kx_kp_b2_xjq_part_2/val/images']
+
+# Keypoints
+kpt_shape: [2, 3] # number of keypoints, number of dims (2 for x,y or 3 for x,y,visible)
+flip_idx: [0, 1]
+
+# Add negative image ---------------------------------------------------------------------------------------------------
+negative_setting:
+  neg_ratio: 0    # 小于等于0时，按原始官方配置训练，大于0时，控制正负样本。
+  use_extra_neg: False
+  extra_neg_sources: {"/Work/chenjun7167/datasets/COCO2017/det_neg/images" : 61559,
+                      "/Work/chenjun7167/datasets/hagrid/yolo_pose_neg": 20000,
+                      }  # 数据集字符串或列表（图片路径或图片列表）
+  fix_dataset_length: 0 # 720000  # 是否自定义每轮参与训练的图片数量
+
+# Classes
+names:
+  0: kx

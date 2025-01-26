@@ -1,3 +1,7 @@
+# train/test directory
+trains_*/
+tests_*/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

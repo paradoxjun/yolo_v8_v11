@@ -1,0 +1,21 @@
+# path: ../datasets/coco-pose # dataset root dir
+train: ['/Work/chenjun7167/datasets/bank_monitor/kx_jh_yolo_pose_patch_origin/train/images']
+
+val: ['/Work/chenjun7167/datasets/bank_monitor/kx_jh_yolo_pose_patch_origin/val/images']
+
+# Keypoints
+kpt_shape: [10, 3] # number of keypoints, number of dims (2 for x,y or 3 for x,y,visible)
+flip_idx: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# Add negative image ---------------------------------------------------------------------------------------------------
+negative_setting:
+  neg_ratio: 0    # 小于等于0时，按原始官方配置训练，大于0时，控制正负样本。
+  use_extra_neg: False
+  extra_neg_sources: {"/Work/chenjun7167/datasets/COCO2017/det_neg/images" : 61559,
+                      "/Work/chenjun7167/datasets/hagrid/yolo_pose_neg": 20000,
+                      }  # 数据集字符串或列表（图片路径或图片列表）
+  fix_dataset_length: 0 # 720000  # 是否自定义每轮参与训练的图片数量
+
+# Classes
+names:
+  0: kx

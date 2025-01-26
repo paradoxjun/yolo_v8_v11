@@ -1,0 +1,26 @@
+# Train settings -------------------------------------------------------------------------------------------------------
+task: pose              # (str) YOLO task, i.e. detect, segment, classify, pose
+mode: train             # (str) YOLO mode, i.e. train, val, predict, export, track, benchmark
+data: ./hand-pose.yaml  # (str, optional) path to data file, i.e. coco8.yaml
+epochs: 600             # (int) number of epochs to train for
+batch: 512              # (int) number of images per batch (-1 for AutoBatch)
+imgsz: 480              # (int | list) input images size as int for train and val modes, or list[w,h] for predict and export modes
+patience: 600           # (int) epochs to wait for no observable improvement for early stopping of training
+device: [2, 6]          # (int | str | list, optional) device to run on, i.e. cuda device=0 or device=0,1,2,3 or device=cpu
+project: ./             # (str, optional) project name
+multi_scale: True       # (bool) Whether to use multiscale during training
+close_mosaic: 0         # (int) disable mosaic augmentation for final epochs (0 to disable)
+resume: False           # (bool) resume training from last checkpoint
+
+# Hyperparameters ------------------------------------------------------------------------------------------------------
+lr0: 0.01               # (float) initial learning rate (i.e. SGD=1E-2, Adam=1E-3)
+lrf: 0.01               # (float) final learning rate (lr0 * lrf)
+box: 7.5                # (float) box loss gain
+cls: 0.5                # (float) cls loss gain (scale with pixels)
+dfl: 1.5                # (float) dfl loss gain
+pose: 12.0              # (float) pose loss gain
+kobj: 1.0               # (float) keypoint obj loss gain
+degrees: 0.0            # (float) image rotation (+/- deg)
+translate: 0.1          # (float) image translation (+/- fraction)
+scale: 0.5              # (float) image scale (+/- gain)
+fliplr: 0.5             # (float) image flip left-right (probability)

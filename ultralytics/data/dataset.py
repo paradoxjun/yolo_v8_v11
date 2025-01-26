@@ -1,5 +1,6 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 
+import random
 import json
 from collections import defaultdict
 from itertools import repeat
@@ -60,8 +61,46 @@ class YOLODataset(BaseDataset):
         self.use_keypoints = task == "pose"
         self.use_obb = task == "obb"
         self.data = data
+
+        # ######################### 控制正负样本平衡: 中间变量 #########################
+        self.im_pos_index = []  # 正样本下标索引
+        self.im_neg_index = []  # 负样本下标索引
+        self.im_pos_num = 0     # 正样本数量
+        self.im_neg_num = 0     # 负样本数量
+        self.img_neg_path = ""  # 负样本路径
+        self.im_neg_files = []  # 负样本文件列表
+        # ######################### 控制正负样本平衡: 中间变量 #########################
+
         assert not (self.use_segments and self.use_keypoints), "Can not use both segments and keypoints."
         super().__init__(*args, **kwargs)
+
+    # ######################### 控制正负样本平衡: __getitem__ #########################
+    def __getitem__(self, index):
+        """Returns transformed label information for given index."""
+        if "train" in self.prefix.lower() and self.data["negative_setting"]["neg_ratio"] > 0:
+            if self.im_pos_num * self.data["negative_setting"]["neg_ratio"] >= self.im_neg_num:
+                self.im_neg_num += 1
+                index = random.choice(self.im_neg_index)
+                # print(f"__getitem__: 选择负样本，当前index为: {index}")
+            else:
+                self.im_pos_num += 1
+                index = random.choice(self.im_pos_index)
+                # print(f"__getitem__: 选择正样本，当前index为: {index}")
+
+        # print(f"__getitem__线程:[{os.getpid()}], index: {index}. 正样本数:{self.im_pos_num}, 负样本数:{self.im_neg_num}")
+        return self.transforms(self.get_image_and_label(index))
+    # ######################### 控制正负样本平衡: __getitem__ #########################
+
+    # ######################### 控制正负样本平衡: __len__ #########################
+    def __len__(self):
+        try:
+            if "train" in self.prefix.lower() and self.data["negative_setting"]["fix_dataset_length"] > 0:
+                return int(self.data["negative_setting"]["fix_dataset_length"])
+        except (ValueError, KeyError, AttributeError) as e:
+            print(f"ERROR: 设置每个epoch长度失败，使用原始数据集长度。发生的错误为：{e}. ")
+
+        return len(self.labels)
+    # ######################### 控制正负样本平衡: __len__ #########################
 
     def cache_labels(self, path=Path("./labels.cache")):
         """
@@ -132,6 +171,29 @@ class YOLODataset(BaseDataset):
 
     def get_labels(self):
         """Returns dictionary of labels for YOLO training."""
+        # ######################### 控制正负样本平衡: 加入负样本图片 #########################
+        try:
+            # 额外增加负样本，仅训练时增加
+            if "train" in self.prefix.lower() and self.data["negative_setting"]["use_extra_neg"]:
+                self.img_neg_path = self.data["negative_setting"]["extra_neg_sources"]         # 负样本文件列表
+                for imp, imn in self.img_neg_path.items():
+                    imp_neg_file = self.get_img_files(imp)      # 一个文件夹下的有效图片列表
+                    imn_real = min(len(imp_neg_file), imn)      # 实际应该读取的文件数
+
+                    print(f'INFO: 额外增加的负样本：[{imp}], 有[{len(imp_neg_file)}]张图片，应该抽取[{imn}]张图片，'
+                          f'实际随机抽取[{imn_real}]张图片。')
+                    imp_neg_file = random.sample(imp_neg_file, imn_real)    # 一个文件夹下实际采样的图片列表
+                    self.im_neg_files += imp_neg_file
+
+                print(f"INFO: 总共实际获取的负样本有：[{len(self.im_neg_files)}]张图片。")
+
+        except (ValueError, KeyError, AttributeError) as e:
+            print(f"ERROR: 读取额外负样本数据失败，不增加负样本。配置文件中[negative_setting]存在错误：{e}")
+            print(f"INFO: 总共实际获取的负样本有：[{len(self.im_neg_files)}]张图片。")
+
+        self.im_files += self.im_neg_files
+        # ######################### 控制正负样本平衡: 加入负样本图片 #########################
+
         self.label_files = img2label_paths(self.im_files)
         cache_path = Path(self.label_files[0]).parent.with_suffix(".cache")
         try:
@@ -169,6 +231,17 @@ class YOLODataset(BaseDataset):
                 lb["segments"] = []
         if len_cls == 0:
             LOGGER.warning(f"WARNING ⚠️ No labels found in {cache_path}, training may not work correctly. {HELP_URL}")
+
+        # ######################### 控制正负样本平衡: 加入正负样本索引 #########################
+        # 仅在train模式下，增加正负样本索引
+        if "train" in self.prefix.lower():
+            for i, label in enumerate(labels):
+                if len(label['cls']) == 0:
+                    self.im_neg_index.append(i)
+                else:
+                    self.im_pos_index.append(i)
+        # ######################### 控制正负样本平衡: 加入正负样本索引 #########################
+
         return labels
 
     def build_transforms(self, hyp=None):
