@@ -1,6 +1,8 @@
 # train/test directory
-trains_*/
-tests_*/
+trains_det/
+trains_pose/
+tests_pose/
+test_pose/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
