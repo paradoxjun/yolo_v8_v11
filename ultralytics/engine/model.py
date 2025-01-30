@@ -800,7 +800,16 @@ class Model(nn.Module):
         self.trainer = (trainer or self._smart_load("trainer"))(overrides=args, _callbacks=self.callbacks)
         if not args.get("resume"):  # manually set model only if not resuming
             self.trainer.model = self.trainer.get_model(weights=self.model if self.ckpt else None, cfg=self.model.yaml)
-            self.model = self.trainer.model
+            if not args.get("custom_model", None):
+                self.model = self.trainer.model
+            else:
+                print(f"\033[1;32mINFO\033[0m: custom_model is True, load custom model. ")
+                for name, param in self.model.named_parameters():
+                    if name == "model.22.dfl.conv.weight":
+                        param.requires_grad = False  # 冻结
+                    else:
+                        param.requires_grad = True  # 解冻其他层
+                self.trainer.model.model = self.model.model
 
         self.trainer.hub_session = self.session  # attach optional HUB session
         self.trainer.train()

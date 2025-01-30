@@ -94,12 +94,35 @@ def on_fit_epoch_end(trainer):
     _log_scalars(trainer.metrics, trainer.epoch + 1)
 
 
+# ============================== show bn weights and bias distribution in tensorboard ==================================
+def on_show_bn_weights_and_bias(trainer):
+    if WRITER:
+        """
+        numpy>=1.18.5,<1.24.0
+        protobuf<4.21.3
+        """
+        show_error = True
+        try:
+            WRITER.add_histogram('BN/weights', trainer.bn_weights.numpy(), trainer.epoch, bins='doane')
+            WRITER.add_histogram('BN/biases', trainer.bn_biases.numpy(), trainer.epoch, bins='doane')
+            bn_params = torch.cat([trainer.bn_weights, trainer.bn_biases]).numpy()  # 记录合并参数 weight 和 bias
+            WRITER.add_histogram('BN/params', bn_params, trainer.epoch, bins='doane')
+        except Exception as e:
+            if show_error:
+                print(f"\033[1;31mERROR\033[0m: plot weight and bias distribution failed. Cause by: {e}")
+            show_error = False
+# ============================== show bn weights and bias distribution in tensorboard ==================================
+
+
 callbacks = (
     {
         "on_pretrain_routine_start": on_pretrain_routine_start,
         "on_train_start": on_train_start,
         "on_fit_epoch_end": on_fit_epoch_end,
         "on_train_epoch_end": on_train_epoch_end,
+        # ============================== show bn weights and bias distribution in tensorboard ==========================
+        "on_show_bn_weights_and_bias": on_show_bn_weights_and_bias,
+        # ============================== show bn weights and bias distribution in tensorboard ==========================
     }
     if SummaryWriter
     else {}

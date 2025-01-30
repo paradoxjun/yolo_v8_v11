@@ -126,3 +126,9 @@ cfg: # (str, optional) for overriding defaults.yaml
 
 # Tracker settings ------------------------------------------------------------------------------------------------------
 tracker: botsort.yaml # (str) tracker type, choices=[botsort.yaml, bytetrack.yaml]
+
+# Custom configuration, sparse training, pruning and distillation ------------------------------------------------------
+custom_model: False     # (bool) load train model from .pt directory, not from model.model.yaml
+add_L1: False           # (bool) use L1 norm
+L1_start: 0             # (float) L1 regularization weight
+L1_end: 0.1             # (float) final L1 regularization weight (L1_start * L1_end), default: 0.1

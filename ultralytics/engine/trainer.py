@@ -257,8 +257,16 @@ class BaseTrainer:
                 )
                 v.requires_grad = True
 
+        # ============================== add parameter: L1 norm  =======================================================
+        self.add_L1 = self.args.add_L1 if self.args.add_L1 is not None else False
+        self.L1_start = self.args.L1_start if self.args.L1_start is not None else 0.0001
+        self.L1_end = self.args.L1_end if self.args.L1_end is not None else 0.1
+        # ============================== add parameter: L1 norm  =======================================================
+
         # Check AMP
-        self.amp = torch.tensor(self.args.amp).to(self.device)  # True or False
+        # self.amp = torch.tensor(self.args.amp).to(self.device)  # True or False
+        self.amp = torch.tensor(self.args.amp and not self.add_L1).to(self.device)  # True or False
+
         if self.amp and RANK in {-1, 0}:  # Single-GPU and DDP
             callbacks_backup = callbacks.default_callbacks.copy()  # backup callbacks as check_amp() resets them
             self.amp = torch.tensor(check_amp(self.model), device=self.device)
@@ -387,6 +395,19 @@ class BaseTrainer:
                 # Backward
                 self.scaler.scale(self.loss).backward()
 
+                # ============================== add parameter: L1 regularization constraint  ==========================
+                if self.add_L1:
+                    l1_coefficient = self.L1_start * (1 - (1 - self.L1_end) * epoch / self.epochs)
+                    for modules_name, modules_layer in self.model.named_modules():
+                        if isinstance(modules_layer, nn.BatchNorm2d):
+                            # 第一个特征提取层，不进行约束
+                            if "model.0." in modules_name:
+                                continue
+
+                            modules_layer.weight.grad.data.add_(l1_coefficient * torch.sign(modules_layer.weight.data))
+                            modules_layer.bias.grad.data.add_(l1_coefficient * torch.sign(modules_layer.bias.data))
+                # ============================== add parameter: L1 regularization constraint  ==========================
+
                 # Optimize - https://pytorch.org/docs/master/notes/amp_examples.html
                 if ni - last_opt_step >= self.accumulate:
                     self.optimizer_step()
@@ -420,6 +441,33 @@ class BaseTrainer:
                         self.plot_training_samples(batch, ni)
 
                 self.run_callbacks("on_train_batch_end")
+
+            # ============================== show bn weights and bias distribution in tensorboard ======================
+            if self.add_L1:
+                module_list_weight = []
+                module_list_bias = []
+                for modules_name, modules_layer in self.model.named_modules():
+                    if isinstance(modules_layer, nn.BatchNorm2d):
+                        module_list_weight.append(modules_layer.state_dict()['weight'])     # 获取BN层的gamma参数（权重）
+                        module_list_bias.append(modules_layer.state_dict()['bias'])         # 获取 BN 层的 beta（偏置）
+
+                # 获取所有 BN 层的通道数
+                size_list = [idx.data.shape[0] for idx in module_list_weight]
+
+                # 预分配 Tensor 存放 BN 权重和偏置
+                self.bn_weights = torch.zeros(sum(size_list))
+                self.bn_biases = torch.zeros(sum(size_list))
+
+                index = 0
+                for idx, size in enumerate(size_list):
+                    self.bn_weights[index:(index + size)] = module_list_weight[idx].data.abs().clone()  # 取绝对值
+                    self.bn_biases[index:(index + size)] = module_list_bias[idx].data.abs().clone()
+                    index += size
+
+                # 合并 BN 权重和偏置
+                self.bn_params = torch.cat([self.bn_weights, self.bn_biases], dim=0)
+                self.run_callbacks("on_show_bn_weights_and_bias")    # 触发回调
+            # ============================== show bn weights and bias distribution in tensorboard ======================
 
             self.lr = {f"lr/pg{ir}": x["lr"] for ir, x in enumerate(self.optimizer.param_groups)}  # for loggers
             self.run_callbacks("on_train_epoch_end")

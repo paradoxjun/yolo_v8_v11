@@ -7,7 +7,7 @@ negative_setting:
   neg_ratio: 1    # 小于等于0时，按原始官方配置训练，大于0时，控制正负样本。
   use_extra_neg: True
   extra_neg_sources: {
-                      "G:/datasets/bank_monitor/0-贵重物品遗留/贵重物品遗留三类图片/2024-07-12-qianbao": 100
+                      # "G:/datasets/bank_monitor/0-贵重物品遗留/贵重物品遗留三类图片/2024-07-12-qianbao": 100
                       }
   fix_dataset_length: 0    # 是否自定义每轮参与训练的图片数量
 
